@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💕 For Shosho</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0810;
+    --card: #160d1c;
+    --accent: #e066a0;
+    --accent2: #ffb347;
+    --text: #f5eff7;
+    --muted: #7a6885;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Floating hearts background */
+  .hearts-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .heart-float {
+    position: absolute;
+    font-size: 16px;
+    opacity: 0;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.25; }
+    90%  { opacity: 0.15; }
+    100% { transform: translateY(-10vh) rotate(30deg); opacity: 0; }
+  }
+
+  /* Ambient orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.2;
+    pointer-events: none;
+  }
+  .orb1 { width: 420px; height: 420px; top: -120px; left: -100px; background: #c77dff; }
+  .orb2 { width: 320px; height: 320px; bottom: -90px; right: -80px; background: #e066a0; }
+  .orb3 { width: 200px; height: 200px; top: 40%; left: 60%; background: #ffb347; opacity: 0.1; }
+
+  /* Top label */
+  .top-label {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* Slideshow */
+  .slideshow {
+    position: relative;
+    width: min(620px, 92vw);
+    z-index: 10;
+  }
+
+  .slide {
+    background: rgba(22, 13, 28, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 60px 52px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+    animation: slideIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+    opacity: 0.7;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(28px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .slide-number {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.25em;
+  }
+
+  .slide-emoji {
+    font-size: 64px;
+    margin-bottom: 24px;
+    display: block;
+    animation: popIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    line-height: 1;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  .slide-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(19px, 3.2vw, 25px);
+    line-height: 1.6;
+    color: var(--text);
+    max-width: 460px;
+  }
+
+  .slide-text em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+
+  .slide-text .highlight {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.15em;
+  }
+
+  /* Arabic text support */
+  .arabic {
+    font-family: 'Playfair Display', serif;
+    direction: rtl;
+    font-size: clamp(20px, 3.5vw, 28px);
+  }
+
+  .slide-caption {
+    margin-top: 22px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 0 0 24px 24px;
+    transition: none;
+    width: 0%;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 28px;
+    justify-content: center;
+  }
+
+  .nav-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 0.22s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.12);
+    box-shadow: 0 0 22px rgba(224,102,160,0.5);
+  }
+  .nav-btn:active { transform: scale(0.93); }
+
+  .dots {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .dot.active {
+    background: var(--accent);
+    width: 22px;
+    border-radius: 3px;
+    box-shadow: 0 0 9px rgba(224,102,160,0.6);
+  }
+
+  .auto-btn {
+    display: block;
+    margin: 14px auto 0;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.14em;
+    transition: all 0.2s;
+  }
+  .auto-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .auto-btn.playing { border-color: var(--accent2); color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="top-label">💕 a little something for shosho · 9 slides</div>
+
+<div class="slideshow">
+  <div class="slide" id="slide">
+    <span class="slide-number" id="slideNum">01 / 06</span>
+    <span class="slide-emoji" id="emoji"></span>
+    <p class="slide-text" id="slideText"></p>
+    <p class="slide-caption" id="slideCaption"></p>
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="controls">
+    <button class="nav-btn" onclick="changeSlide(-1)">←</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" onclick="changeSlide(1)">→</button>
+  </div>
+
+  <button class="auto-btn" id="autoBtn" onclick="toggleAuto()">▶ AUTO PLAY</button>
+</div>
+
+<script>
+const slides = [
+  {
+    emoji: "🫵🏻",
+    text: '<span class="highlight">SHOSHO</span>',
+    caption: "— yes, you 🫵🏻"
+  },
+  {
+    emoji: "🥹❤️",
+    text: "Just a nickname for <em>a beautiful girl named Shahd.</em>",
+    caption: "— and that says everything"
+  },
+  {
+    emoji: "🤷🏻‍♂️",
+    text: '<span class="arabic">مرة واحد صعيدي</span>',
+    caption: "— what can I say 🤷🏻‍♂️"
+  },
+  {
+    emoji: "🎵",
+    text: "You're amazing <em>just the way you are.</em>",
+    caption: "— Bruno Mars said it, but I mean it more"
+  },
+  {
+    emoji: "🥷🏻❤️",
+    text: "You're like a ninja with your black vest — <em>visiting sites with style.</em>",
+    caption: "— stealthy & stunning 🖤"
+  },
+  {
+    emoji: "🪞🤷🏻‍♂️",
+    text: "Couldn't believe how much it's beautiful… <em>until I been to the field.</em> Check your mirror. 🤷🏻‍♂️❤️",
+    caption: "— the proof is right there"
+  },
+  {
+    emoji: "😁✨",
+    text: "Keep that smile — it suits you and makes you <em>100,000x more beautiful.</em> Just saying. 🤷🏻‍♂️",
+    caption: "— not an exaggeration"
+  },
+  {
+    emoji: "🤷🏻‍♂️",
+    text: '<span class="arabic">مرة واحد صعيدي</span>',
+    caption: "— what can I say 🤷🏻‍♂️"
+  },
+  {
+    emoji: "🌹✈️",
+    text: "From <em>Riyadh</em> — with Love.",
+    caption: "— الرياض 🤍"
+  }
+];
+
+let current = 0;
+let autoTimer = null;
+let isPlaying = false;
+
+// Floating hearts
+const heartsBg = document.getElementById('heartsBg');
+const heartChars = ['❤️','💕','💗','💖','🌸','✨','💓'];
+for (let i = 0; i < 18; i++) {
+  const h = document.createElement('span');
+  h.className = 'heart-float';
+  h.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+  h.style.left = Math.random() * 100 + 'vw';
+  h.style.animationDuration = (9 + Math.random() * 14) + 's';
+  h.style.animationDelay = (Math.random() * 12) + 's';
+  h.style.fontSize = (10 + Math.random() * 14) + 'px';
+  heartsBg.appendChild(h);
+}
+
+function buildDots() {
+  const d = document.getElementById('dots');
+  d.innerHTML = '';
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === current ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    d.appendChild(dot);
+  });
+}
+
+function goTo(idx) {
+  current = (idx + slides.length) % slides.length;
+  renderSlide(true);
+  if (isPlaying) resetProgress();
+}
+
+function changeSlide(dir) { goTo(current + dir); }
+
+function renderSlide(animate) {
+  const s = slides[current];
+  const slide = document.getElementById('slide');
+  if (animate) {
+    slide.style.animation = 'none';
+    void slide.offsetWidth;
+    slide.style.animation = 'slideIn 0.55s cubic-bezier(0.34,1.56,0.64,1)';
+  }
+  document.getElementById('emoji').textContent = s.emoji;
+  document.getElementById('slideText').innerHTML = s.text;
+  document.getElementById('slideCaption').textContent = s.caption;
+  document.getElementById('slideNum').textContent =
+    String(current + 1).padStart(2,'0') + ' / ' + String(slides.length).padStart(2,'0');
+
+  const em = document.getElementById('emoji');
+  em.style.animation = 'none';
+  void em.offsetWidth;
+  em.style.animation = 'popIn 0.55s cubic-bezier(0.34,1.56,0.64,1)';
+
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+}
+
+function toggleAuto() {
+  isPlaying = !isPlaying;
+  const btn = document.getElementById('autoBtn');
+  btn.textContent = isPlaying ? '⏸ PAUSE' : '▶ AUTO PLAY';
+  btn.classList.toggle('playing', isPlaying);
+  if (isPlaying) resetProgress();
+  else {
+    clearTimeout(autoTimer);
+    const bar = document.getElementById('progressBar');
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+  }
+}
+
+function resetProgress() {
+  clearTimeout(autoTimer);
+  const bar = document.getElementById('progressBar');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  setTimeout(() => {
+    bar.style.transition = 'width 4s linear';
+    bar.style.width = '100%';
+  }, 30);
+  autoTimer = setTimeout(() => {
+    changeSlide(1);
+    if (isPlaying) resetProgress();
+  }, 4000);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') changeSlide(1);
+  if (e.key === 'ArrowLeft') changeSlide(-1);
+  if (e.key === ' ') { e.preventDefault(); toggleAuto(); }
+});
+
+buildDots();
+renderSlide(false);
+</script>
+</body>
+</html>
