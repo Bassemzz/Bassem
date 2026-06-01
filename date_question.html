@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An Important Question 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080510;
+    --rose: #e8607a;
+    --gold: #f0c060;
+    --lavender: #c084d4;
+    --text: #f7f0f2;
+    --muted: #6b5a6e;
+    --card: rgba(20,10,28,0.9);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  /* Star field */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.4); }
+  }
+
+  /* Ambient orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .o1 { width:500px;height:500px;top:-150px;left:-150px;background:var(--lavender);opacity:0.12; }
+  .o2 { width:400px;height:400px;bottom:-120px;right:-100px;background:var(--rose);opacity:0.12; }
+  .o3 { width:250px;height:250px;top:40%;left:45%;background:var(--gold);opacity:0.06; }
+
+  /* Floating petals */
+  .petal {
+    position: fixed;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    animation: petalFall linear infinite;
+  }
+  @keyframes petalFall {
+    0%   { transform: translateY(-40px) rotate(0deg) translateX(0px); opacity: 0; }
+    10%  { opacity: 0.4; }
+    90%  { opacity: 0.2; }
+    100% { transform: translateY(110vh) rotate(360deg) translateX(60px); opacity: 0; }
+  }
+
+  /* Main card */
+  .card {
+    position: relative;
+    z-index: 10;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 28px;
+    padding: 56px 52px 48px;
+    width: min(520px, 94vw);
+    text-align: center;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 50px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
+    animation: cardIn 0.8s cubic-bezier(0.34,1.4,0.64,1) both;
+  }
+  @keyframes cardIn {
+    from { opacity:0; transform:translateY(40px) scale(0.93); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  .card::before {
+    content:'';
+    position:absolute;
+    inset:-1px;
+    border-radius:28px;
+    background: linear-gradient(135deg, rgba(232,96,122,0.3), transparent 40%, rgba(192,132,212,0.2) 80%, transparent);
+    z-index:-1;
+    pointer-events:none;
+  }
+
+  /* Top tag */
+  .tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+  }
+
+  /* Envelope icon */
+  .envelope {
+    font-size: 52px;
+    margin-bottom: 20px;
+    display: block;
+    animation: floatBob 3s ease-in-out infinite;
+  }
+  @keyframes floatBob {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-10px) rotate(3deg); }
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 38px);
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .subtext {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    line-height: 1.8;
+    margin-bottom: 36px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .subtext span {
+    color: rgba(247,240,242,0.5);
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), var(--gold), transparent);
+    margin: 0 auto 36px;
+  }
+
+  /* Options */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .option {
+    position: relative;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 16px 20px 16px 52px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s;
+    overflow: hidden;
+  }
+  .option:hover {
+    background: rgba(232,96,122,0.08);
+    border-color: rgba(232,96,122,0.3);
+    transform: translateX(4px);
+  }
+  .option:hover .checkbox { border-color: var(--rose); }
+  .option::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(90deg, rgba(232,96,122,0.05), transparent);
+    opacity:0;
+    transition: opacity 0.25s;
+  }
+  .option:hover::after { opacity:1; }
+
+  .checkbox {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px; height: 20px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+    font-size: 12px;
+  }
+
+  .option-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    display: block;
+    line-height: 1.3;
+  }
+  .option-sub {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-top: 3px;
+    display: block;
+  }
+
+  /* Result screen */
+  .result {
+    display: none;
+    animation: resultIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both;
+  }
+  @keyframes resultIn {
+    from { opacity:0; transform:scale(0.8); }
+    to   { opacity:1; transform:scale(1); }
+  }
+
+  .result-emoji { font-size: 64px; margin-bottom: 20px; display:block; }
+  .result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px,4.5vw,36px);
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .result-title em { color: var(--rose); font-style: italic; }
+  .result-sub {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    line-height: 2;
+  }
+
+  /* Confetti canvas */
+  #confetti {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+<div id="petals"></div>
+
+<canvas id="confetti"></canvas>
+
+<div class="card">
+  <div id="question">
+    <div class="tag">✦ an important question ✦</div>
+    <span class="envelope">💌</span>
+    <h1>Will you go on a<br><em>virtual date</em> with me?</h1>
+    <p class="subtext">
+      I know we can't physically be there —<br>
+      <span>but a virtual one is the one we can have right now.</span><br>
+      So… what do you say, Shosho? 🥹
+    </p>
+    <div class="divider"></div>
+    <div class="options">
+      <div class="option" onclick="choose(this, 1)">
+        <div class="checkbox">☐</div>
+        <span class="option-label">Yes! 🥰</span>
+        <span class="option-sub">the correct answer</span>
+      </div>
+      <div class="option" onclick="choose(this, 2)">
+        <div class="checkbox">☐</div>
+        <span class="option-label">Yes! 😊</span>
+        <span class="option-sub">also the correct answer</span>
+      </div>
+      <div class="option" onclick="choose(this, 3)">
+        <div class="checkbox">☐</div>
+        <span class="option-label">All of the above ✅</span>
+        <span class="option-sub">the most correct answer</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <span class="result-emoji" id="resultEmoji">🥳</span>
+    <h2 class="result-title" id="resultTitle">She said <em>Yes!</em></h2>
+    <p class="result-sub" id="resultSub">loading...</p>
+  </div>
+</div>
+
+<script>
+// Stars
+const starsEl = document.getElementById('stars');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const size=Math.random()*2+0.5;
+  s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+  starsEl.appendChild(s);
+}
+
+// Petals
+const petalsEl=document.getElementById('petals');
+const petalChars=['🌸','🌹','✨','💕','🌷','💗'];
+for(let i=0;i<12;i++){
+  const p=document.createElement('div');
+  p.className='petal';
+  p.textContent=petalChars[Math.floor(Math.random()*petalChars.length)];
+  p.style.cssText=`left:${Math.random()*100}vw;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*10}s;font-size:${10+Math.random()*10}px`;
+  petalsEl.appendChild(p);
+}
+
+const results = [
+  { emoji:'🥳💕', title:'She said <em>Yes!</em>', sub:'I knew it all along 🤷🏻‍♂️\nVirtual date is ON — from Riyadh, with love.' },
+  { emoji:'🌹😍', title:'<em>Yes!</em> She said it!', sub:'Smart girl, great choice.\nSee you on our virtual date, Shosho 💕' },
+  { emoji:'🎉❤️', title:'All of the above!', sub:'The most correct answer — just like you.\nJeddah &nbsp;→&nbsp; Riyadh 💌🥹' }
+];
+
+function choose(el, idx) {
+  // tick the checkbox
+  el.querySelector('.checkbox').textContent = '✓';
+  el.querySelector('.checkbox').style.cssText = 'position:absolute;left:18px;top:50%;transform:translateY(-50%);width:20px;height:20px;border:1.5px solid #e8607a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;background:rgba(232,96,122,0.15);color:#e8607a';
+  el.style.background='rgba(232,96,122,0.1)';
+  el.style.borderColor='rgba(232,96,122,0.4)';
+
+  setTimeout(()=>{
+    const r = results[idx-1];
+    document.getElementById('resultEmoji').textContent = r.emoji;
+    document.getElementById('resultTitle').innerHTML = r.title;
+    document.getElementById('resultSub').innerHTML = r.sub.replace('\n','<br>');
+    document.getElementById('question').style.display='none';
+    document.getElementById('result').style.display='block';
+    launchConfetti();
+  }, 600);
+}
+
+// Confetti
+function launchConfetti(){
+  const canvas=document.getElementById('confetti');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  const pieces=[];
+  const colors=['#e8607a','#f0c060','#c084d4','#ff9fb2','#fff'];
+  for(let i=0;i<120;i++){
+    pieces.push({
+      x:Math.random()*canvas.width,
+      y:-20-Math.random()*100,
+      r:3+Math.random()*5,
+      d:Math.random()*120+60,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      tilt:Math.random()*10-5,
+      tiltAngle:0,
+      tiltSpeed:0.05+Math.random()*0.1,
+      speed:1.5+Math.random()*2.5,
+      shape:Math.random()>0.5?'circle':'rect'
+    });
+  }
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.beginPath();
+      ctx.fillStyle=p.color;
+      if(p.shape==='circle'){
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      } else {
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.tiltAngle);
+        ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);
+        ctx.restore();
+      }
+      ctx.fill();
+      p.y+=p.speed;
+      p.x+=Math.sin(frame/p.d)*1.5;
+      p.tiltAngle+=p.tiltSpeed;
+    });
+    frame++;
+    if(frame<260) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>
